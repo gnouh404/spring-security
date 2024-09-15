@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/huongdb
+    username: postgres
+    password: 654321a@A
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  secret-key: ct5VMzEEE8sJeL9qVAqvNjKJaURXyc8k/xB+cD7j7CBiYwyfVJeM0C+XPGf5BGBD
+
+
