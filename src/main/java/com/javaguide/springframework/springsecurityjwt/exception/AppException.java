@@ -1,6 +1,9 @@
 package com.javaguide.springframework.springsecurityjwt.exception;
 
-public class AppException extends RuntimeException{
+import lombok.Getter;
+
+@Getter
+public class AppException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
@@ -9,7 +12,4 @@ public class AppException extends RuntimeException{
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode(){
-        return errorCode;
-    }
 }
