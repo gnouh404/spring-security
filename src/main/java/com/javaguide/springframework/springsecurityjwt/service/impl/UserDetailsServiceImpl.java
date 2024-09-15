@@ -1,4 +1,4 @@
-package com.javaguide.springframework.springsecurityjwt.service;
+package com.javaguide.springframework.springsecurityjwt.service.impl;
 
 import com.javaguide.springframework.springsecurityjwt.dto.response.CustomUserDetails;
 import com.javaguide.springframework.springsecurityjwt.repository.UserRepository;

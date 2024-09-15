@@ -3,6 +3,7 @@ package com.javaguide.springframework.springsecurityjwt.controller.user;
 import com.javaguide.springframework.springsecurityjwt.dto.response.UserResponseDto;
 import com.javaguide.springframework.springsecurityjwt.entity.User;
 import com.javaguide.springframework.springsecurityjwt.service.UserService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +17,7 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(@Qualifier("userServiceImpl") UserService userService) {
         this.userService = userService;
     }
 

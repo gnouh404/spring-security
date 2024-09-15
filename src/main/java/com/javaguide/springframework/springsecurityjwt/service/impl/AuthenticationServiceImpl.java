@@ -1,4 +1,4 @@
-package com.javaguide.springframework.springsecurityjwt.service;
+package com.javaguide.springframework.springsecurityjwt.service.impl;
 
 import com.javaguide.springframework.springsecurityjwt.dto.request.AuthenticationResquest;
 import com.javaguide.springframework.springsecurityjwt.dto.request.RegisterRequest;
@@ -11,6 +11,8 @@ import com.javaguide.springframework.springsecurityjwt.exception.AppException;
 import com.javaguide.springframework.springsecurityjwt.exception.ErrorCode;
 import com.javaguide.springframework.springsecurityjwt.repository.RoleRepository;
 import com.javaguide.springframework.springsecurityjwt.repository.UserRepository;
+import com.javaguide.springframework.springsecurityjwt.service.AuthenticationService;
+import com.javaguide.springframework.springsecurityjwt.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -20,8 +22,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 
-@Service
-public class AuthenticationService {
+@Service("authServiceImpl")
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -29,7 +31,7 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RoleRepository roleRepository, AuthenticationManager authenticationManager) {
+    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RoleRepository roleRepository, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;

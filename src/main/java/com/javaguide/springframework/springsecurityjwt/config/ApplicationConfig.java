@@ -1,6 +1,6 @@
 package com.javaguide.springframework.springsecurityjwt.config;
 
-import com.javaguide.springframework.springsecurityjwt.service.UserDetailsServiceImpl;
+import com.javaguide.springframework.springsecurityjwt.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
