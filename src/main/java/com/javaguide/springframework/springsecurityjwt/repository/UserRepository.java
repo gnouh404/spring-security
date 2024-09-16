@@ -15,10 +15,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT new com.javaguide.springframework.springsecurityjwt.dto.response.UserResponseDto(u.firstName, u.lastName, u.email) FROM User u")
     List<UserResponseDto> findAllUsers();
 
-    @Query("""
-    select u
-    from User u
-    where u.id = :id or u.id is null 
-    """)
+
     Optional<User> findById(Integer id);
 }

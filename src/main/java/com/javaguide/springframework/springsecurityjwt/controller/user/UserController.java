@@ -1,6 +1,7 @@
 package com.javaguide.springframework.springsecurityjwt.controller.user;
 
 import com.javaguide.springframework.springsecurityjwt.dto.response.UserResponseDto;
+import com.javaguide.springframework.springsecurityjwt.dto.response.UserResponseTest;
 import com.javaguide.springframework.springsecurityjwt.entity.User;
 import com.javaguide.springframework.springsecurityjwt.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +31,7 @@ public class UserController {
 
     @GetMapping("{id}")
     @PostAuthorize("hasRole('ADMIN') || returnObject.body.email == authentication.name")
-    public ResponseEntity<User> getUserById(@PathVariable(required = false) Integer id){
+    public ResponseEntity<User> getUserById(@PathVariable Integer id){
         return ResponseEntity
                 .ok(userService.getUserById(id));
     }

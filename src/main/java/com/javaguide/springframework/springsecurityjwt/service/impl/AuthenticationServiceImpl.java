@@ -13,6 +13,7 @@ import com.javaguide.springframework.springsecurityjwt.repository.RoleRepository
 import com.javaguide.springframework.springsecurityjwt.repository.UserRepository;
 import com.javaguide.springframework.springsecurityjwt.service.AuthenticationService;
 import com.javaguide.springframework.springsecurityjwt.service.JwtService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -23,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service("authServiceImpl")
+@Transactional
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
@@ -75,6 +77,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String jwtToken = jwtService.generateToken(new CustomUserDetails(user));
         return new AuthenticationResponse(jwtToken);
     }
-
-
 }
