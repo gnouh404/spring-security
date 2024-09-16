@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class UsersRolesId implements Serializable {
@@ -27,13 +28,11 @@ public class UsersRolesId implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         UsersRolesId other = (UsersRolesId) o;
-        return this.userId == other.userId && this.roleId == other.roleId;
+        return Objects.equals(this.userId, other.userId) && Objects.equals(this.roleId, other.roleId);
     }
 
     @Override
     public int hashCode() {
-        int result = userId;
-        result = 31 * result + roleId;
-        return result;
+        return Objects.hash(this.userId, this.roleId);
     }
 }
