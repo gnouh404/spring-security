@@ -5,7 +5,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(404, "User not found"),
     INVALID_CREDENTIALS(401, "Invalid credentials"),
     ACCESS_DENIED(403, "You do not have permission to access this resource"),
-    PERMISSION_NOT_EXISTS(404, "One or more permissions does not exists")
+    PERMISSION_NOT_EXISTS(404, "One or more permissions does not exists"),
+    PERMISSION_EXISTS(400, "Permission already exists")
     ;
 
     private final String message;

@@ -9,7 +9,8 @@ import lombok.Data;
 public class Permission {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permissions_seq_generator")
+    @SequenceGenerator(name = "permissions_seq_generator", sequenceName = "permissions_seq", allocationSize = 1)
     private int id;
 
     @Column(name = "permission_name")

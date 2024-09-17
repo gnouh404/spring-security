@@ -3,7 +3,6 @@ package com.javaguide.springframework.springsecurityjwt.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaguide.springframework.springsecurityjwt.dto.request.RoleRequest;
 import com.javaguide.springframework.springsecurityjwt.dto.response.RoleResponse;
-import com.javaguide.springframework.springsecurityjwt.dto.response.impl.RoleResponseImpl;
 import com.javaguide.springframework.springsecurityjwt.entity.Permission;
 import com.javaguide.springframework.springsecurityjwt.entity.Role;
 import com.javaguide.springframework.springsecurityjwt.exception.AppException;
@@ -52,11 +51,13 @@ public class RoleServiceImpl implements RoleService {
         // throw exception if permission not exists
         if(!permissionExists){
             throw new AppException(ErrorCode.PERMISSION_NOT_EXISTS);
+        } else {
+            role.setPermissions(permissions);
+            roleRepository.save(role);
+            return roleRepository.getRoleResponse(role.getName());
         }
 
         // save role and return response
-        role.setPermissions(permissions);
-        roleRepository.save(role);
-        return roleRepository.getRoleResponse(role.getName());
+
     }
 }
