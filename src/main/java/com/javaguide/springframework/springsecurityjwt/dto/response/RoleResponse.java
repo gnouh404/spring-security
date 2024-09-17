@@ -1,4 +1,6 @@
 package com.javaguide.springframework.springsecurityjwt.dto.response;
 
-public record RoleResponse(String name, String descriptions) {
+public interface RoleResponse {
+    String getRoleName();
+    String getPermissions();
 }
