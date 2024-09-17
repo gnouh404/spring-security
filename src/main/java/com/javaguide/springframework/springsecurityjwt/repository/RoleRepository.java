@@ -1,7 +1,6 @@
 package com.javaguide.springframework.springsecurityjwt.repository;
 
 import com.javaguide.springframework.springsecurityjwt.dto.response.RoleResponse;
-import com.javaguide.springframework.springsecurityjwt.dto.response.impl.RoleResponseImpl;
 import com.javaguide.springframework.springsecurityjwt.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
