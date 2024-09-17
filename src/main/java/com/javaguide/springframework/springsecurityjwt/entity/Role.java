@@ -10,13 +10,11 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role {
 
-    public Role() {}
-    public Role(String name) {
-        this.name = name;
-    }
+
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_seq_generator")
+    @SequenceGenerator(name = "roles_seq_generator", sequenceName = "roles_seq", allocationSize = 1)
     private int id;
 
     @Column(name = "role_name")
@@ -29,4 +27,10 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id")
     )
     Set<Permission> permissions;
+
+    public Role() {}
+    public Role(String name) {
+        this.name = name;
+    }
+
 }

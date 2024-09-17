@@ -14,4 +14,10 @@ public class Permission {
 
     @Column(name = "permission_name")
     private String name;
+
+    public Permission(){}
+
+    public Permission(String name){
+        this.name = name;
+    }
 }
