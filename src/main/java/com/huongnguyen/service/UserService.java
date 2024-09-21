@@ -1,5 +1,6 @@
 package com.huongnguyen.service;
 
+import com.huongnguyen.dto.request.UserRequest;
 import com.huongnguyen.dto.request.UserUpdateRequest;
 import com.huongnguyen.dto.response.UserResponseDto;
 import com.huongnguyen.entity.User;
@@ -8,11 +9,13 @@ import java.util.List;
 
 public interface UserService {
 
-    public List<UserResponseDto> getAllUsers();
+    List<UserResponseDto> getAllUsers();
 
-    public UserResponseDto myInfo();
+    UserResponseDto myInfo();
 
-    public User getUserById(Integer id);
+    User getUserById(Integer id);
 
-    public User updateUser(UserUpdateRequest request);
+    void updateUser(UserUpdateRequest request);
+
+    void createUser(UserRequest request);
 }

@@ -1,6 +1,7 @@
 package com.huongnguyen.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huongnguyen.dto.request.UserRequest;
 import com.huongnguyen.dto.request.UserUpdateRequest;
 import com.huongnguyen.entity.Role;
 import com.huongnguyen.exception.AppException;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(UserUpdateRequest request) {
+    public void updateUser(UserUpdateRequest request) {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
@@ -64,7 +65,21 @@ public class UserServiceImpl implements UserService {
         );
         user.setRoles(roles);
 
-        return userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void createUser(UserRequest request) {
+        User user = new User();
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setActive(false);
+        Set<Role> role = new HashSet<>();
+        role.add(roleRepository.findByName("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND)));
+        user.setRoles(role);
+        userRepository.save(user);
     }
 
     public UserResponseDto myInfo(){

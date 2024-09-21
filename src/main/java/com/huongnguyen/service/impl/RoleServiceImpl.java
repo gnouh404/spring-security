@@ -1,6 +1,8 @@
 package com.huongnguyen.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huongnguyen.dto.request.AddPermissionToRole;
+import com.huongnguyen.dto.request.PermissionRequest;
 import com.huongnguyen.dto.request.RoleRequest;
 import com.huongnguyen.dto.response.RoleResponse;
 import com.huongnguyen.exception.AppException;
@@ -62,5 +64,17 @@ public class RoleServiceImpl implements RoleService {
 
     public List<RoleResponse> getAllRoleWithPermissions() {
         return roleRepository.findAllRoleWithPermissions();
+    }
+
+    public Role addPermissionToRole(AddPermissionToRole request) {
+        Role role = roleRepository.findByName(request.roleName()).
+                orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        if (role.getPermissions().stream().anyMatch(p -> p.getName().equals(request.permissionName()))) {
+            throw new AppException(ErrorCode.PERMISSION_EXISTS);
+        } else {
+            Permission permission = permissionRepository.findByName(request.permissionName()).orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));
+            role.getPermissions().add(permission);
+        }
+        return roleRepository.save(role);
     }
 }

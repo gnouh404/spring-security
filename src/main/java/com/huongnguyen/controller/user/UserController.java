@@ -1,5 +1,6 @@
 package com.huongnguyen.controller.user;
 
+import com.huongnguyen.dto.request.UserRequest;
 import com.huongnguyen.dto.request.UserUpdateRequest;
 import com.huongnguyen.dto.response.ApiResponse;
 import com.huongnguyen.dto.response.UserResponseDto;
@@ -50,6 +51,14 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ApiResponse(200,"Update success"));
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse> createUser(@RequestBody UserRequest request){
+        userService.createUser(request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse(200,"Create success"));
     }
 
 }

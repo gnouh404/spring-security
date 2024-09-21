@@ -40,4 +40,12 @@ public class User implements Serializable {
     )
     private Set<Role> roles;
 
+    public User(String firstName, String lastName, String email, String password, boolean active){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.active = active;
+    }
+
 }

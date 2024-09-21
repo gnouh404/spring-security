@@ -11,6 +11,7 @@ public enum ErrorCode {
     PERMISSION_NOT_EXISTS(404, "One or more permissions does not exists"),
     PERMISSION_EXISTS(400, "Permission already exists"),
     ROLE_NOT_FOUND(404, "Role not found"),
+    PERMISSION_NOT_FOUND(404, "Permission not found")
     ;
 
     private final String message;

@@ -1,6 +1,7 @@
 package com.huongnguyen.controller.authorization;
 
 import com.huongnguyen.dto.request.PermissionRequest;
+import com.huongnguyen.dto.response.ApiResponse;
 import com.huongnguyen.service.PermissionService;
 import com.huongnguyen.dto.response.PermissionResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,9 +23,10 @@ public class PermissionController {
     }
 
     @PostMapping("/createPermission")
-    public ResponseEntity<PermissionResponse> create(@RequestBody PermissionRequest request){
+    public ResponseEntity<ApiResponse> create(@RequestBody PermissionRequest request){
+        permissionService.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(permissionService.create(request));
+                .body(new ApiResponse(200,"Create permission success"));
     }
 }

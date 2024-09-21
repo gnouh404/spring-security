@@ -24,17 +24,14 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public PermissionResponse create(PermissionRequest request) {
+    public Permission create(PermissionRequest request) {
         Permission permission = objectMapper.convertValue(request, Permission.class);
 
         if (permissionRepository.findByName(request.name()).isPresent()){
             throw new AppException(ErrorCode.PERMISSION_EXISTS);
         } else {
             permission.setName(request.name());
-            permissionRepository.save(permission);
-            return permissionRepository.getPermissionResponse(request.name());
+            return permissionRepository.save(permission);
         }
-
-
     }
 }
