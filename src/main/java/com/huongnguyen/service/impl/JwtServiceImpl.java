@@ -1,11 +1,12 @@
 package com.huongnguyen.service.impl;
 
 import com.huongnguyen.service.JwtService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,13 @@ import java.util.function.Function;
 @Service("jwtServiceImpl")
 public class JwtServiceImpl implements JwtService {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
+
     @Value("${jwt.secret-key}")
     private String secretKey;
+
+    @Value("${jwt.access-token.expiration}")
+    private int jwtExpirationInMs;
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
@@ -65,7 +71,7 @@ public class JwtServiceImpl implements JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(
-                        Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()
+                        Instant.now().plusSeconds(jwtExpirationInMs).toEpochMilli()
                 ))
                 .claim("jti", UUID.randomUUID().toString())
                 .claim("scope", buildScope(userDetails))
@@ -75,12 +81,36 @@ public class JwtServiceImpl implements JwtService {
 
     public boolean isValidToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
+
+    public boolean validateToken(String token){
+        try {
+            Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (SignatureException e){
+            log.error("Invalid JWT signature: {}", e.getMessage());
+        } catch (MalformedJwtException e){
+            log.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty: {}", e.getMessage());
+        }
+
+        return false;
+    }
+
 
     public String buildScope(UserDetails userDetails) {
         StringJoiner joiner = new StringJoiner(" ");
@@ -91,5 +121,7 @@ public class JwtServiceImpl implements JwtService {
         }
         return joiner.toString();
     }
+
+
 
 }

@@ -20,7 +20,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq_generator")
     @SequenceGenerator(name = "users_seq_generator", sequenceName = "users_seq", allocationSize = 1)
-    private Integer id;
+    private Long id;
 
     private String firstName;
 

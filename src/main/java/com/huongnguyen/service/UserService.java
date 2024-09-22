@@ -13,7 +13,7 @@ public interface UserService {
 
     UserResponseDto myInfo();
 
-    User getUserById(Integer id);
+    User getUserById(Long id);
 
     void updateUser(UserUpdateRequest request);
 

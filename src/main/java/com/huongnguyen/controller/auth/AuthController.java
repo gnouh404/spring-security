@@ -3,10 +3,11 @@ package com.huongnguyen.controller.auth;
 import com.huongnguyen.dto.request.LogoutRequest;
 import com.huongnguyen.dto.request.AuthenticationResquest;
 import com.huongnguyen.dto.request.RegisterRequest;
-import com.huongnguyen.dto.response.ApiResponse;
-import com.huongnguyen.dto.response.AuthenticationResponse;
-import com.huongnguyen.dto.response.RegisterResponse;
+import com.huongnguyen.dto.request.TokenRefreshRequest;
+import com.huongnguyen.dto.response.*;
+import com.huongnguyen.entity.RefreshToken;
 import com.huongnguyen.service.AuthenticationService;
+import com.huongnguyen.service.RefreshTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,14 @@ public class AuthController {
 
     private final AuthenticationService authenticationService;
 
-    public AuthController(@Qualifier("authServiceImpl") AuthenticationService authenticationService) {
+    private final RefreshTokenService refreshTokenService;
+
+
+
+    public AuthController(@Qualifier("authServiceImpl") AuthenticationService authenticationService,
+                          @Qualifier("refreshTokenServiceImpl") RefreshTokenService refreshTokenService) {
         this.authenticationService = authenticationService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @PostMapping("/register")
@@ -34,16 +41,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationResquest request) {
+    public ResponseEntity<JwtResponse> login(@RequestBody AuthenticationResquest request) {
         return ResponseEntity.
                 ok(authenticationService.login(request));
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<ApiResponse> logout(@RequestBody LogoutRequest request){
-        authenticationService.logout(request);
+    @PostMapping("/refresh-token")
+    public ResponseEntity<TokenRefreshResponse> refreshToken(@RequestBody TokenRefreshRequest request) {
+
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ApiResponse(200, "Logout successfully"));
+                .ok(authenticationService.refreshToken(request));
     }
+
+
 }

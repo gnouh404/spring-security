@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping("{id}")
     @PostAuthorize("hasRole('ADMIN') || returnObject.body.email == authentication.name")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id){
+    public ResponseEntity<User> getUserById(@PathVariable Long id){
         return ResponseEntity
                 .ok(userService.getUserById(id));
     }

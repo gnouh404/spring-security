@@ -31,4 +31,11 @@ public class GlobalExceptionHandle {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse(400, ErrorCode.INVALID_CREDENTIALS.getMessage()));
     }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    public ResponseEntity<ApiResponse> handleTokenRefreshException(TokenRefreshException e){
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse(HttpStatus.FORBIDDEN.value(), e.getMessage()));
+    }
 }

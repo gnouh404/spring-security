@@ -4,39 +4,29 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.Instant;
 import java.util.Objects;
-import java.util.Set;
 
-@Entity
+@Entity(name = "refresh_tokens")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table(name = "roles")
-public class Role {
-
-
+public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_seq_generator")
-    @SequenceGenerator(name = "roles_seq_generator", sequenceName = "roles_seq", allocationSize = 1)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "role_name")
-    private String name;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "roles_permissions",
-            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    Set<Permission> permissions;
+    @Column(nullable = false, unique = true)
+    private String token;
 
-    public Role(String name) {
-        this.name = name;
-    }
+    @Column(nullable = false)
+    private Instant expiryTime;
 
     @Override
     public final boolean equals(Object o) {
@@ -45,8 +35,8 @@ public class Role {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Role role = (Role) o;
-        return getId() != null && Objects.equals(getId(), role.getId());
+        RefreshToken that = (RefreshToken) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
