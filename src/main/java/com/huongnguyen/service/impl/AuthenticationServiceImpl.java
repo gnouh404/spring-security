@@ -1,12 +1,15 @@
 package com.huongnguyen.service.impl;
 
 import com.huongnguyen.dto.request.AuthenticationResquest;
+import com.huongnguyen.dto.request.LogoutRequest;
 import com.huongnguyen.dto.request.RegisterRequest;
 import com.huongnguyen.dto.response.AuthenticationResponse;
 import com.huongnguyen.dto.response.RegisterResponse;
+import com.huongnguyen.entity.InvalidToken;
 import com.huongnguyen.entity.Role;
 import com.huongnguyen.exception.AppException;
 import com.huongnguyen.exception.ErrorCode;
+import com.huongnguyen.repository.InvalidTokenRepository;
 import com.huongnguyen.repository.RoleRepository;
 import com.huongnguyen.service.AuthenticationService;
 import com.huongnguyen.service.JwtService;
@@ -20,6 +23,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,13 +36,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
+    private final InvalidTokenRepository invalidTokenRepository;
 
-    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RoleRepository roleRepository, AuthenticationManager authenticationManager) {
+    public AuthenticationServiceImpl(UserRepository userRepository,
+                                     PasswordEncoder passwordEncoder,
+                                     JwtService jwtService,
+                                     RoleRepository roleRepository,
+                                     AuthenticationManager authenticationManager,
+                                     InvalidTokenRepository invalidTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
+        this.invalidTokenRepository = invalidTokenRepository;
     }
 
     public RegisterResponse register(RegisterRequest request) {
@@ -77,5 +88,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         String jwtToken = jwtService.generateToken(new CustomUserDetails(user));
         return new AuthenticationResponse(jwtToken);
+    }
+
+    @Override
+    public void logout(LogoutRequest request) {
+        String jti = jwtService.extractJti(request.token());
+        Date expiration = jwtService.extractExpiration(request.token());
+
+        InvalidToken invalidToken = new InvalidToken();
+        invalidToken.setJti(jti);
+        invalidToken.setExpirationTime(expiration);
+
+        invalidTokenRepository.save(invalidToken);
     }
 }

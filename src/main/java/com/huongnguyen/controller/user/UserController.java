@@ -6,6 +6,7 @@ import com.huongnguyen.dto.response.ApiResponse;
 import com.huongnguyen.dto.response.UserResponseDto;
 import com.huongnguyen.entity.User;
 import com.huongnguyen.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createUser(@RequestBody UserRequest request){
+    public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody UserRequest request){
         userService.createUser(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

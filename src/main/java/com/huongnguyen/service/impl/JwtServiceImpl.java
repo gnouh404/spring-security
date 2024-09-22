@@ -31,6 +31,10 @@ public class JwtServiceImpl implements JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public String extractJti(String token) {
+        return extractAllClaims(token).get("jti", String.class);
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimResolver){
         Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
@@ -63,6 +67,7 @@ public class JwtServiceImpl implements JwtService {
                 .setExpiration(new Date(
                         Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()
                 ))
+                .claim("jti", UUID.randomUUID().toString())
                 .claim("scope", buildScope(userDetails))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();

@@ -11,7 +11,8 @@ public enum ErrorCode {
     PERMISSION_NOT_EXISTS(404, "One or more permissions does not exists"),
     PERMISSION_EXISTS(400, "Permission already exists"),
     ROLE_NOT_FOUND(404, "Role not found"),
-    PERMISSION_NOT_FOUND(404, "Permission not found")
+    PERMISSION_NOT_FOUND(404, "Permission not found"),
+    USER_EXISTS(400, "User with this email already exists"),
     ;
 
     private final String message;
@@ -21,5 +22,4 @@ public enum ErrorCode {
         this.code = code;
         this.message = message;
     }
-
 }

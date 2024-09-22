@@ -22,4 +22,6 @@ public interface JwtService {
     public boolean isValidToken(String token, UserDetails userDetails);
 
     public Claims extractAllClaims(String token);
+
+    String extractJti(String token);
 }

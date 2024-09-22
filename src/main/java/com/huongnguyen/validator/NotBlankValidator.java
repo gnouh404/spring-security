@@ -5,17 +5,14 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class NotBlankValidator implements ConstraintValidator<NotBlank, String> {
 
-    private boolean notBlank;
-
     @Override
     public void initialize(NotBlank constraintAnnotation) {
-        ConstraintValidator.super.initialize(constraintAnnotation);
-        notBlank = constraintAnnotation.notBlank();
+
     }
 
     @Override
-    public boolean isValid(String string, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
 
-        return !(string.isEmpty() || string.isBlank());
+        return value != null && !value.trim().isEmpty();
     }
 }

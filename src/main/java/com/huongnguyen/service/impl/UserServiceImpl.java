@@ -70,15 +70,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(UserRequest request) {
+        if (userRepository.findByEmail(request.email()).isPresent()){
+            throw new AppException(ErrorCode.USER_EXISTS);
+        }
+
         User user = new User();
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setActive(false);
+
         Set<Role> role = new HashSet<>();
         role.add(roleRepository.findByName("USER").orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND)));
         user.setRoles(role);
+
         userRepository.save(user);
     }
 
