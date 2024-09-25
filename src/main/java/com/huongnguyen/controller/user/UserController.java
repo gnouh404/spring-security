@@ -7,6 +7,7 @@ import com.huongnguyen.dto.response.UserResponseDto;
 import com.huongnguyen.entity.User;
 import com.huongnguyen.service.UserService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
+
 
     public UserController(@Qualifier("userServiceImpl") UserService userService) {
         this.userService = userService;
@@ -56,10 +59,11 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody UserRequest request){
+
         userService.createUser(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ApiResponse(200,"Create success"));
+                .body(new ApiResponse(201,"Create success"));
     }
 
 }
