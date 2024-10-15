@@ -73,6 +73,5 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value(201)
         );
-
     }
 }
