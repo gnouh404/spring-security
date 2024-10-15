@@ -2,7 +2,6 @@ package com.huongnguyen.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.time.Instant;
 import java.util.Objects;

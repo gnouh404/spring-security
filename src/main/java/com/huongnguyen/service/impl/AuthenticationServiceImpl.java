@@ -1,14 +1,17 @@
 package com.huongnguyen.service.impl;
 
 import com.huongnguyen.dto.request.AuthenticationResquest;
+import com.huongnguyen.dto.request.LogoutRequest;
 import com.huongnguyen.dto.request.RegisterRequest;
 import com.huongnguyen.dto.request.TokenRefreshRequest;
 import com.huongnguyen.dto.response.*;
+import com.huongnguyen.entity.InvalidToken;
 import com.huongnguyen.entity.RefreshToken;
 import com.huongnguyen.entity.Role;
 import com.huongnguyen.exception.AppException;
 import com.huongnguyen.exception.ErrorCode;
 import com.huongnguyen.exception.TokenRefreshException;
+import com.huongnguyen.repository.InvalidTokenRepository;
 import com.huongnguyen.repository.RoleRepository;
 import com.huongnguyen.service.AuthenticationService;
 import com.huongnguyen.service.JwtService;
@@ -23,6 +26,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,19 +40,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
+    private final InvalidTokenRepository invalidTokenRepo;
 
     public AuthenticationServiceImpl(UserRepository userRepository,
                                      PasswordEncoder passwordEncoder,
                                      JwtService jwtService,
                                      RoleRepository roleRepository,
                                      AuthenticationManager authenticationManager,
-                                     @Qualifier("refreshTokenServiceImpl") RefreshTokenService refreshTokenService) {
+                                     @Qualifier("refreshTokenServiceImpl") RefreshTokenService refreshTokenService,
+                                     InvalidTokenRepository invalidTokenRepo) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
         this.refreshTokenService = refreshTokenService;
+        this.invalidTokenRepo = invalidTokenRepo;
     }
 
     public RegisterResponse register(RegisterRequest request) {
@@ -71,7 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
-    public JwtResponse login(AuthenticationResquest request) {
+    public LoginResponse login(AuthenticationResquest request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -87,7 +94,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         String jwtToken = jwtService.generateToken(new CustomUserDetails(user));
 
-        return new JwtResponse(
+        return new LoginResponse(
                 jwtToken,
                 "Bearer",
                 refreshTokenService.createRefreshToken(user.getId()).getToken(),
@@ -109,6 +116,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     return new TokenRefreshResponse(jwtToken, refreshToken);
                 })
                 .orElseThrow(() -> new TokenRefreshException(refreshToken, "Refresh token is not in database!"));
+    }
+
+    @Override
+    public void logout(LogoutRequest request) {
+        if (!jwtService.validateToken(request.token()) && jwtService.isTokenExpired(request.token())){
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        String jti = jwtService.extractJti(request.token());
+        Instant expiryTime = jwtService.extractExpiration(request.token()).toInstant();
+
+        InvalidToken token = new InvalidToken();
+        token.setId(jti);
+        token.setExpiryTime(expiryTime);
+
+        invalidTokenRepo.save(token);
     }
 
 }

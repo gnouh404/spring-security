@@ -24,4 +24,8 @@ public interface JwtService {
     public Claims extractAllClaims(String token);
 
     String extractJti(String token);
+
+    public boolean validateToken(String token);
+
+    public boolean isTokenExpired(String token);
 }

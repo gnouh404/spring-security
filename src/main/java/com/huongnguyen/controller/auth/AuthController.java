@@ -41,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody AuthenticationResquest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody AuthenticationResquest request) {
         return ResponseEntity.
                 ok(authenticationService.login(request));
     }
@@ -51,6 +51,14 @@ public class AuthController {
 
         return ResponseEntity
                 .ok(authenticationService.refreshToken(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse> logout(@RequestBody LogoutRequest request) {
+        authenticationService.logout(request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse(HttpStatus.OK.value(), "Logout successful"));
     }
 
 

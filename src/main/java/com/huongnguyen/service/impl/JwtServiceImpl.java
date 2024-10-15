@@ -1,5 +1,6 @@
 package com.huongnguyen.service.impl;
 
+import com.huongnguyen.repository.InvalidTokenRepository;
 import com.huongnguyen.service.JwtService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -22,12 +23,17 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
+    private final InvalidTokenRepository repo;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
 
     @Value("${jwt.access-token.expiration}")
     private int jwtExpirationInMn;
+
+    public JwtServiceImpl(InvalidTokenRepository repo) {
+        this.repo = repo;
+    }
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
@@ -81,7 +87,9 @@ public class JwtServiceImpl implements JwtService {
 
     public boolean isValidToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return username.equals(userDetails.getUsername()) &&
+                !isTokenExpired(token) &&
+                !repo.existsById(extractJti(token));
     }
 
     public boolean isTokenExpired(String token) {

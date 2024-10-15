@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huongnguyen.dto.request.AuthenticationResquest;
 import com.huongnguyen.dto.request.UserRequest;
 import com.huongnguyen.dto.response.ApiResponse;
-import com.huongnguyen.dto.response.JwtResponse;
+import com.huongnguyen.dto.response.LoginResponse;
 import com.huongnguyen.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,8 +58,8 @@ class UserControllerTest {
                 .andReturn();
 
         String json = result.getResponse().getContentAsString();
-        JwtResponse jwtResponse = objectMapper.readValue(json, JwtResponse.class);
-        String token = jwtResponse.token();
+        LoginResponse loginResponse = objectMapper.readValue(json, LoginResponse.class);
+        String token = loginResponse.token();
 
         // given
 

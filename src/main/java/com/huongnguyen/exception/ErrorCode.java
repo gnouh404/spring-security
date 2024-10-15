@@ -13,6 +13,7 @@ public enum ErrorCode {
     ROLE_NOT_FOUND(404, "Role not found"),
     PERMISSION_NOT_FOUND(404, "Permission not found"),
     USER_EXISTS(400, "User with this email already exists"),
+    UNAUTHORIZED(401, "Unauthorized"),
     ;
 
     private final String message;
