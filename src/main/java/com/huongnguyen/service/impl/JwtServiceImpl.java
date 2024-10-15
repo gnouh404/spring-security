@@ -27,7 +27,7 @@ public class JwtServiceImpl implements JwtService {
     private String secretKey;
 
     @Value("${jwt.access-token.expiration}")
-    private int jwtExpirationInMs;
+    private int jwtExpirationInMn;
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
@@ -71,7 +71,7 @@ public class JwtServiceImpl implements JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(
-                        Instant.now().plusSeconds(jwtExpirationInMs).toEpochMilli()
+                        Instant.now().plus(jwtExpirationInMn, ChronoUnit.MINUTES).toEpochMilli()
                 ))
                 .claim("jti", UUID.randomUUID().toString())
                 .claim("scope", buildScope(userDetails))
