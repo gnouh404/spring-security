@@ -20,8 +20,8 @@ jwt:
   secret-key: ct5VMzEEE8sJeL9qVAqvNjKJaURXyc8k/xB+cD7j7CBiYwyfVJeM0C+XPGf5BGBD
   access-token:
     expiration:
-      300
+      60
   refresh-token:
     expiration:
-      600
+      120
 

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Value("${jwt.refresh-token.expiration}")
-    private Long refreshTokenDurationMs;
+    private Long refreshTokenDurationInMn;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -35,7 +36,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         RefreshToken refreshToken = new RefreshToken();
 
         refreshToken.setUser(userRepository.findById(userId).get());
-        refreshToken.setExpiryTime(Instant.now().plusSeconds(refreshTokenDurationMs));
+        refreshToken.setExpiryTime(Instant.now().plus(refreshTokenDurationInMn, ChronoUnit.MINUTES));
         refreshToken.setToken(UUID.randomUUID().toString());
 
         return refreshTokenRepository.save(refreshToken);
