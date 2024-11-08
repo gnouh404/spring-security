@@ -66,8 +66,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
             Set<Role> roles = new HashSet<>(Set.of(role));
             User user = User.builder()
-                    .firstName(request.firstName())
-                    .lastName(request.lastName())
                     .email(request.email())
                     .password(passwordEncoder.encode(request.password()))
                     .active(false)

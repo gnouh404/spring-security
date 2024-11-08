@@ -47,7 +47,7 @@ class UserControllerTest {
     @Test
     void createUserIsSuccess() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        AuthenticationResquest loginRequest = new AuthenticationResquest("admin@gmail.com", "huong123");
+        AuthenticationResquest loginRequest = new AuthenticationResquest("huong@gmail.com", "huong123");
 
 
         // get access token

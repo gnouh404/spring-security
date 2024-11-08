@@ -14,6 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +32,7 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(c -> c.configurationSource(corsFilter()))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
@@ -42,5 +46,19 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
+
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+
+        return urlBasedCorsConfigurationSource;
     }
 }
