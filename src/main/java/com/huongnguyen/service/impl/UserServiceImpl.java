@@ -57,8 +57,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
 
@@ -82,8 +80,6 @@ public class UserServiceImpl implements UserService {
 
         // set information to user
         User user = new User();
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setActive(false);

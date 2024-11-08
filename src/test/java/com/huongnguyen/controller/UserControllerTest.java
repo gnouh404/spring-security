@@ -32,14 +32,12 @@ class UserControllerTest {
     private UserService userService;
 
     private UserRequest request;
-    private ApiResponse response;
 
 
 
     @BeforeEach
     public void initData(){
-        request = new UserRequest("John", "Cena", "jcena@gmail.com", "cena123");
-        response = new ApiResponse(200, "Create user success");
+        request = new UserRequest("John", "Cena", "jcena@gmail.com", "cena123", "Ha Noi");
 
     }
 

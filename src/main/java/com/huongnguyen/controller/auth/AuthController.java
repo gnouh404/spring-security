@@ -24,10 +24,8 @@ public class AuthController {
 
 
 
-    public AuthController(@Qualifier("authServiceImpl") AuthenticationService authenticationService,
-                          @Qualifier("refreshTokenServiceImpl") RefreshTokenService refreshTokenService) {
+    public AuthController(@Qualifier("authServiceImpl") AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
-        this.refreshTokenService = refreshTokenService;
     }
 
     @PostMapping("/register")
